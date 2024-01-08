@@ -3,7 +3,7 @@ PKGi PS3 CN
 
 [![Build package](https://github.com/ps3-pkgi/pkgi/actions/workflows/build.yml/badge.svg)](https://github.com/ps3-pkgi/pkgi/actions/workflows/build.yml)
 
-**PKGi PS3 CN** is a chinese lang fork of [pkgi-ps3](https://github.com/bucanero/pkgi-ps3).
+**PKGi PS3 CN** is a Simplified Chinese language fork of [pkgi-ps3](https://github.com/bucanero/pkgi-ps3).
 
 The `pkgi-ps3 cn` homebrew app allows to download and install `.pkg` files directly on your PS3.
 
@@ -17,7 +17,6 @@ The `pkgi-ps3 cn` homebrew app allows to download and install `.pkg` files direc
 * **resumes interrupted downloads:** you can stop a download at any time, switch applications, and come back to resume the download later.
 * **content activation:** the app can generate `.rif` files for downloaded content (system must be activated)
 * **content updates:** the app can check online for available content updates
-* **localization support:** Finnish, French, German, Italian, Polish, Portuguese, Spanish, Turkish
 
 ### Notes:
 * **queuing** up multiple downloads is only supported when using `background download` mode.
@@ -49,15 +48,11 @@ It will open the context menu. Press ![Triangle](https://github.com/ps3-pkgi/pkg
    
    You can use a tool like RIF2RAP to generate a `.rap` from your existing `.rif` files. Then you can use a tool like `hexdump` to get the hex byte string.
 
-2. Where to get `.pkg` links?
-   
-   You can use [PSDLE][] to find `.pkg` URLs for the games you own. Then either use the original URL, or host the file on your own web server.
-
-3. Where to remove interrupted/failed downloads to free up disk space?
+2. Where to remove interrupted/failed downloads to free up disk space?
    
    Check the `/dev_hdd0/tmp/pkgi` folder - each download will be in a separate `.pkg` file by its title id. Simply delete the file and start again.
 
-4. Download speed is too slow!
+3. Download speed is too slow!
    
    Optimization is still pending. If `direct` download is slow, you can use `background download` mode to download files using the internal PS3 Download Manager.
 
