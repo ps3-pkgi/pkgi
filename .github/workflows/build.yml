@@ -60,7 +60,7 @@ jobs:
         
 
     - name: Build PKGi App Package
-      run:   make pkg -j4 V=1 VERBOSE=1
+      run:   make pkg V=1 VERBOSE=1
 
     - name: Push package artifact
       if: github.event_name != 'push'
