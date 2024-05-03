@@ -43,12 +43,12 @@ jobs:
     - name: Install ya2d
       working-directory: ya2d_ps3/libya2d
       run: |
-        make install
+        make install V=1 VERBOSE=1
 
     - name: Install mini18n
       working-directory: mini18n
       run: |
-        make install
+        make install V=1 VERBOSE=1
 
     - name: Get Game Url info
       run: |
@@ -60,11 +60,11 @@ jobs:
         
 
     - name: Build PKGi App Package
-      run:   make pkg
+      run:   make pkg -j4 V=1 VERBOSE=1
 
     - name: Push package artifact
       if: github.event_name != 'push'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pkgi-ps3-build_${{ env.sha_name }}
         path: pkgi.pkg
