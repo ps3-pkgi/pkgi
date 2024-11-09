@@ -14,16 +14,16 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Checkout ya2d
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ps3-pkgi/ya2d
         path: ya2d_ps3
 
     - name: Checkout mini18n
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ps3-pkgi/mini18n
         path: mini18n
