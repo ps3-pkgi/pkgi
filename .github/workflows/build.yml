@@ -52,12 +52,21 @@ jobs:
 
     - name: Get Game Url info
       run: |
-        aria2c http://nopaystation.com/tsv/PS3_GAMES.tsv -o pkgfiles/USRDIR/pkgi_games.txt
-        aria2c http://nopaystation.com/tsv/PS3_DLCS.tsv -o pkgfiles/USRDIR/pkgi_dlcs.txt
-        aria2c http://nopaystation.com/tsv/PS3_THEMES.tsv -o pkgfiles/USRDIR/pkgi_themes.txt
-        aria2c http://nopaystation.com/tsv/PS3_AVATARS.tsv -o pkgfiles/USRDIR/pkgi_avatars.txt
-        aria2c http://nopaystation.com/tsv/PS3_DEMOS.tsv -o pkgfiles/USRDIR/pkgi_demos.txt
-        
+          arir2c http://nopaystation.com/tsv/PS3_GAMES.tsv -o 1.tsv
+          arir2c http://nopaystation.com/tsv/PS3_DLCS.tsv -o 2.tsv
+          arir2c http://nopaystation.com/tsv/PS3_THEMES.tsv -o 3.tsv
+          arir2c http://nopaystation.com/tsv/PS3_AVATARS.tsv -o 4.tsv
+          arir2c http://nopaystation.com/tsv/PS3_DEMOS.tsv -o 5.tsv
+          arir2c http://nopaystation.com/tsv/pending/PS3_GAMES.tsv -o 6.tsv
+          arir2c http://nopaystation.com/tsv/pending/PS3_DLCS.tsv -o 7.tsv
+          arir2c http://nopaystation.com/tsv/pending/PS3_THEMES.tsv -o 8.tsv
+          arir2c http://nopaystation.com/tsv/pending/PS3_AVATARS.tsv -o 9.tsv
+          arir2c http://nopaystation.com/tsv/pending/PS3_DEMOS.tsv -o 0.tsv
+          (cat 1.tsv; echo ""; tail -n +2  6.tsv) > pkgfiles/USRDIR/PS3_GAMES.tsv
+          (cat 2.tsv; echo ""; tail -n +2  7.tsv) > pkgfiles/USRDIR/PS3_DLCS.tsv
+          (cat 3.tsv; echo ""; tail -n +2  8.tsv) > pkgfiles/USRDIR/PS3_THEMES.tsv
+          (cat 4.tsv; echo ""; tail -n +2  9.tsv) > pkgfiles/USRDIR/PS3_AVATARS.tsv
+          (cat 5.tsv; echo ""; tail -n +2  0.tsv) > pkgfiles/USRDIR/PS3_DEMOS.tsv
 
     - name: Build PKGi App Package
       run:   make pkg V=1 VERBOSE=1
