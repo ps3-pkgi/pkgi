@@ -30,6 +30,7 @@ jobs:
 
     - name: Set env vars
       run: |
+        set -x
         echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
         echo "PS3DEV=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
         echo "PSL1GHT=${GITHUB_WORKSPACE}/ps3dev" >> $GITHUB_ENV
@@ -52,6 +53,7 @@ jobs:
 
     - name: Get Game Url info
       run: |
+          set -x
           aria2c http://nopaystation.com/tsv/PS3_GAMES.tsv -o 1.tsv
           aria2c http://nopaystation.com/tsv/PS3_DLCS.tsv -o 2.tsv
           aria2c http://nopaystation.com/tsv/PS3_THEMES.tsv -o 3.tsv
