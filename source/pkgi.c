@@ -694,37 +694,14 @@ static void pkgi_update_check_thread(void)
 static void pkgi_load_language(const char* lang)
 {
     char path[256];
-
-<<<<<<< HEAD
-    pkgi_snprintf(path, sizeof(path), PKGI_APP_FOLDER "/LANG/zh.po", lang);
-=======
     pkgi_snprintf(path, sizeof(path), PKGI_APP_FOLDER "/LANG/%s.po", lang);
->>>>>>> 7395f1012e1af8fedebb4f1a225691d3a9cf9183
     LOG("Loading language file (%s)...", path);
     mini18n_set_locale(path);
 }
 
-<<<<<<< HEAD
-=======
-static int pkgi_security_check()
-{
-    return 0;
-}
-
->>>>>>> 7395f1012e1af8fedebb4f1a225691d3a9cf9183
 int main(int argc, const char* argv[])
 {
     pkgi_start();
-
-<<<<<<< HEAD
-=======
-    if (!pkgi_security_check())
-    {
-        pkgi_msg_dialog(MDIALOG_OK, "ERROR: Integrity check failed!\n\nGet the latest official release from:\nhttps://github.com/bucanero/pkgi-ps3/");
-        return 0;
-    }
-
->>>>>>> 7395f1012e1af8fedebb4f1a225691d3a9cf9183
     pkgi_load_config(&config, (char*) &refresh_url, sizeof(refresh_url[0]));
     if (config.music)
     {
