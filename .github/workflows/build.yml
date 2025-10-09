@@ -74,6 +74,14 @@ jobs:
     - name: Build PKGi App Package
       run:   make pkg V=1 VERBOSE=1
 
+    - name: release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')      
+      with:
+        files: pkgi.pkg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Push package artifact
       if: github.event_name != 'push'
       uses: actions/upload-artifact@v4
