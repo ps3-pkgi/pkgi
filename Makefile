@@ -1,7 +1,6 @@
 #---------------------------------------------------------------------------------
 # Clear the implicit built in rules
 #---------------------------------------------------------------------------------
-SHELL="/usr/bin/bash -x"
 .SUFFIXES:
 ONESHELL:
 #---------------------------------------------------------------------------------
@@ -128,13 +127,13 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 #---------------------------------------------------------------------------------
 $(BUILD):
-	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	[ -d $@ ] || mkdir -p $@
+	$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile V=1 VERBOSE=1
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self  EBOOT.BIN
+	echo clean ...
+	rm -fr $(BUILD) $(OUTPUT).elf $(OUTPUT).self  EBOOT.BIN
 
 #---------------------------------------------------------------------------------
 run:
@@ -146,7 +145,7 @@ pkg:	$(BUILD) $(OUTPUT).pkg
 #---------------------------------------------------------------------------------
 
 npdrm: $(BUILD)
-	@$(SELF_NPDRM) $(SCETOOL_FLAGS) --np-content-id=$(CONTENTID) --encrypt $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../EBOOT.BIN
+	$(SELF_NPDRM) $(SCETOOL_FLAGS) --np-content-id=$(CONTENTID) --encrypt $(BUILDDIR)/$(basename $(notdir $(OUTPUT))).elf $(BUILDDIR)/../EBOOT.BIN
 
 #---------------------------------------------------------------------------------
 
