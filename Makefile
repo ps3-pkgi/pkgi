@@ -2,7 +2,6 @@
 # Clear the implicit built in rules
 #---------------------------------------------------------------------------------
 .SUFFIXES:
-ONESHELL:
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PSL1GHT)),)
 $(error "Please set PSL1GHT in your environment. export PSL1GHT=<path>")
