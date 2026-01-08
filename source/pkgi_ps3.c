@@ -12,6 +12,7 @@
 #include <lv2/sysfs.h>
 #include <lv2/process.h>
 #include <net/net.h>
+#include <net/netctl.h>
 
 #include <unistd.h>
 #include <string.h>
@@ -47,8 +48,6 @@
 struct pkgi_http
 {
     int used;
-    uint64_t size;
-    uint64_t offset;
     CURL *curl;
 };
 
@@ -1134,6 +1133,8 @@ int pkgi_validate_url(const char* url)
 
 void pkgi_curl_init(CURL *curl)
 {
+    union net_ctl_info proxy_info;
+
     // Set user agent string
     curl_easy_setopt(curl, CURLOPT_USERAGENT, PKGI_USER_AGENT);
     // don't verify the certificate's name against host
@@ -1152,9 +1153,25 @@ void pkgi_curl_init(CURL *curl)
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
     // request using SSL for the FTP transfer if available
     curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_TRY);
+
+    // check for proxy settings
+    memset(&proxy_info, 0, sizeof(proxy_info));
+    netCtlGetInfo(NET_CTL_INFO_HTTP_PROXY_CONFIG, &proxy_info);
+
+    if (proxy_info.http_proxy_config == NET_CTL_HTTP_PROXY_ON)
+    {
+        memset(&proxy_info, 0, sizeof(proxy_info));
+        netCtlGetInfo(NET_CTL_INFO_HTTP_PROXY_SERVER, &proxy_info);
+        curl_easy_setopt(curl, CURLOPT_PROXY, proxy_info.http_proxy_server);
+        curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+
+        memset(&proxy_info, 0, sizeof(proxy_info));
+        netCtlGetInfo(NET_CTL_INFO_HTTP_PROXY_PORT, &proxy_info);
+        curl_easy_setopt(curl, CURLOPT_PROXYPORT, proxy_info.http_proxy_port);
+    }
 }
 
-pkgi_http* pkgi_http_get(const char* url, const char* content, uint64_t offset)
+pkgi_http* pkgi_http_get(const char* url, uint64_t offset)
 {
     LOG("http get");
 
@@ -1203,17 +1220,26 @@ pkgi_http* pkgi_http_get(const char* url, const char* content, uint64_t offset)
     return(http);
 }
 
-int pkgi_http_response_length(pkgi_http* http, int64_t* length)
+int pkgi_http_content_size(const char* url, int64_t* length)
 {
+    CURL *curl;
     CURLcode res;
 
+    curl = curl_easy_init();
+    if(!curl)
+    {
+        LOG("cURL init error");
+        return 0;
+    }
+
+    pkgi_curl_init(curl);
+    curl_easy_setopt(curl, CURLOPT_URL, url);
     // do the download request without getting the body
-    curl_easy_setopt(http->curl, CURLOPT_NOBODY, 1L);
-    curl_easy_setopt(http->curl, CURLOPT_NOPROGRESS, 1L);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
     // Perform the request
-    res = curl_easy_perform(http->curl);
-
+    res = curl_easy_perform(curl);
     if(res != CURLE_OK)
     {
         LOG("curl_easy_perform() failed: %s", curl_easy_strerror(res));
@@ -1221,12 +1247,12 @@ int pkgi_http_response_length(pkgi_http* http, int64_t* length)
     }
 
     long status = 0;
-    curl_easy_getinfo(http->curl, CURLINFO_RESPONSE_CODE, &status);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
     LOG("http status code = %d", status);
 
-    curl_easy_getinfo(http->curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, length);
+    curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD_T, length);
     LOG("http response length = %llu", *length);
-    http->size = *length;
+    curl_easy_cleanup(curl);
 
     return 1;
 }
@@ -1479,7 +1505,7 @@ char * pkgi_http_download_buffer(const char* url, uint32_t* buf_size)
     return (chunk.memory);
 }
 
-const char * pkgi_get_user_language()
+const char * pkgi_get_user_language(void)
 {
     int language;
 

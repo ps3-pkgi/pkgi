@@ -209,6 +209,18 @@ Run `make` to create a release build. After that, run `make pkg` to create a `.p
 You can also set the environment variable `PS3LOAD=tcp:x.x.x.x` to the PS3's IP address;
 that will allow you to use `make run` and send `pkgi-ps3.self` directly to the [PS3LoadX listener](https://github.com/bucanero/ps3loadx).
 
+## Building with Docker
+
+If you don't have the PS3 toolchain installed, you can build using Docker:
+
+```
+make -f Makefile.docker docker-pkg
+```
+
+This builds the Docker image (cached) and compiles the project inside the container. The output `.pkg` file will be in the project directory.
+
+To build without creating the package: `make -f Makefile.docker docker-build`
+
 ## Debugging
 
 To enable debug logging, build PKGi PS3 with `make DEBUGLOG=1`. The application will send debug messages to
@@ -218,7 +230,10 @@ UDP multicast address `239.255.0.100:30000`. To receive them you can use [socat]
 
 # License
 
-`pkgi-ps3` is released under the [MIT License](LICENSE).
+This program is free software: you can redistribute it and/or modify
+it under the terms of the [GNU General Public License][pkgi_license] as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
 
 [PSDLE]: https://repod.github.io/psdle/
 [socat]: http://www.dest-unreach.org/socat/
